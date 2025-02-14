@@ -1,8 +1,5 @@
 pipeline {
-    agent {
-       dockerContainer 'varshithakj/java-app:v1'
-    }
-
+    agent any
     tools {
         gradle 'gradle'
         jdk "jdk17"
@@ -28,8 +25,10 @@ pipeline {
         }
         stage('sonarqube Analysis') {
             steps {
-               sh './gradlew compileJava'
+               withSonarQubeEnv(credentialsId: 'sonar-token') {
+                 sh "./gradlew sonar"
             }
+        }
         }
         stage('gradle build') {
             steps {
