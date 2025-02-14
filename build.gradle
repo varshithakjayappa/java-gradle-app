@@ -34,6 +34,6 @@ sonar {
   properties {
     property "sonar.projectKey", "java_gradle_app"
 	property "sonar.host.url", "http://localhost:9000"
-    property "sonar.login", "squ_20627a792a95504bff2fc1bcb49a10d95b5d4a5b"
+    property "sonar.login", "sonar"
   }
 }
