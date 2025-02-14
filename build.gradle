@@ -29,9 +29,8 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-apply plugin: "org.sonarqube"
 
-sonarqube {
+sonar {
   properties {
     property "sonar.projectKey", "java_gradle_app"
 	property "sonar.host.url", "http://localhost:9000"
