@@ -1,8 +1,5 @@
-ppipeline {
-    agent {
-       dockerContainer 'varshithakj/java-app:v1'
-    }
-
+pipeline {
+    agent any
     tools {
         gradle 'gradle'
         jdk "jdk17"
