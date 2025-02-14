@@ -28,7 +28,8 @@ ppipeline {
         }
         stage('sonarqube Analysis') {
             steps {
-               sh './gradlew compileJava'
+               withSonarQubeEnv(credentialsId: 'sonar-token') {
+                 sh "./gradlew sonar"
             }
         }
         stage('gradle build') {
