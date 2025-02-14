@@ -32,8 +32,8 @@ tasks.named('test') {
 
 sonar {
   properties {
-    property "sonar.projectKey", "java_gradle_app"
+    property "sonar.projectKey", "java-app"
 	property "sonar.host.url", "http://localhost:9000"
-    property "sonar.login", "sonar"
+    property "sonar.login", "squ_a59f5dd12d17a98c60bc918614d850eb62926b95"
   }
 }
