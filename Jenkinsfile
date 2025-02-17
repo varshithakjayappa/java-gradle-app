@@ -23,12 +23,27 @@ pipeline {
                sh './gradlew compileJava'
             }
         }
+        stage('Build & Run Tests') {
+            steps {
+                sh './gradlew clean build jacocoTestReport'
+            }
+        }
         stage('sonarqube Analysis') {
             steps {
                withSonarQubeEnv(installationName: 'sonarserver',credentialsId: 'sonar-token') {
                  sh "./gradlew sonar"
             }
         }
+        }
+        stage("Quality Gate") {
+            steps {
+                 timeout(time: 1, unit: 'MINUTES') {
+                        def qg = waitForQualityGate()
+                        if (qg.status != 'OK') {
+                            error "Pipeline failed due to Quality Gate failure: ${qg.status}"
+                        }
+                    }
+            }
         }
         stage('gradle build') {
             steps {

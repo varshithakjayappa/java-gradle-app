@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.4.2'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id "org.sonarqube" version "4.3.1.3277"
+	id 'jacoco'
 }
 
 group = 'java-app'
@@ -13,11 +14,18 @@ java {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
+ 
+jacoco {
+    toolVersion = "0.8.8" // Ensure latest version
+} 
 
 repositories {
 	mavenCentral()
 }
-
+test {
+    useJUnitPlatform() // Enable JUnit 5 if needed
+    finalizedBy jacocoTestReport // Ensures coverage is generated after tests
+}
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -27,11 +35,20 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+}
 sonar {
   properties {
     property "sonar.projectKey", "java-app"
 	property "sonar.host.url", "http://localhost:9000"
     property "sonar.login", "squ_a59f5dd12d17a98c60bc918614d850eb62926b95"
+	 // JaCoCo Coverage Report Path
+    property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
   }
 }
