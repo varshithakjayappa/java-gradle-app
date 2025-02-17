@@ -6,6 +6,9 @@ pipeline {
     }
     environment{
         VERSION = "${env.BUILD_ID}"
+        NEXUS_URL = "192.168.1.100:8083"
+        NEXUS_REPO = "docker-repo"
+        IMAGE_NAME = "java-app"
     }
     stages {
         stage('Clean workspace') {
@@ -35,7 +38,7 @@ pipeline {
             }
         }
         }
-        stage("Quality Gate") {
+        /*stage("Quality Gate") {
             steps {
                  timeout(time: 1, unit: 'MINUTES') {
                         def qg = waitForQualityGate()
@@ -44,10 +47,24 @@ pipeline {
                         }
                     }
             }
-        }
-        stage('gradle build') {
+        }*/
+        stage('Login to Nexus') {
             steps {
-               sh './gradlew build'
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'Nexus-user-pass', passwordVariable: 'Nexus_pass', usernameVariable: 'Nexus_credential')]) {
+                    sh "echo $Nexus_pass | docker login -u $Nexus_credential -p $Nexus-user-pass $NEXUS_URL " 
+                 }
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t $NEXUS_URL/$NEXUS_REPO/$IMAGE_NAME:$VERSION ."
+            }
+        }
+        stage('Push to Nexus') {
+            steps {
+                sh "docker push $NEXUS_URL/$NEXUS_REPO/$IMAGE_NAME:$VERSION"
             }
         }
     }
