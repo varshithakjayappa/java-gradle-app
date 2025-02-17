@@ -6,7 +6,7 @@ pipeline {
     }
     environment{
         VERSION = "${env.BUILD_ID}"
-        NEXUS_URL = "192.168.1.100:8083"
+        NEXUS_URL = "172.20.0.4:8083"
         NEXUS_REPO = "docker-repo"
         IMAGE_NAME = "java-app"
     }
